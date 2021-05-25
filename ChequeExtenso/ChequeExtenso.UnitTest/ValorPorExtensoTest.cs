@@ -140,7 +140,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_1000000000()
         {
-            double valor = 100000000;
+            double valor = 1000000000;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -266,7 +266,7 @@ namespace ChequeExtenso.UnitTest
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("um milhão oitocentos e cinquenta e dois mil e setecentos reais", resultado);
+            Assert.AreEqual("um milhão oitocentos e cinquenta e dois mil e setecentos reaiss", resultado);
         }
 
         [TestCase]
