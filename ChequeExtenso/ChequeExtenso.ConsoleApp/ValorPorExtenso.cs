@@ -17,115 +17,104 @@ namespace ChequeExtenso.ConsoleApp
 
         public string ConverterParaExtenso()
         {
-            string valorTxt = valor.ToString();
             string numeroExtenso = "";
-            int tamanhoDosDigitos = valorTxt.Length;
-            bool ehNumeroReal = valorTxt.Contains(".");
+            string inteiroTxt = valor.ToString();
 
-            //Conversao de numeros quebrados que nao funciona
-            //if (ehNumeroReal)
-            //{
-            //    numeroFracao = valorTxt.Substring(valorTxt.IndexOf(".")).TrimStart('0').Trim('.');
-            //}
+            string fracaoExtenso = "";
+            bool ehNumeroReal = inteiroTxt.Contains(",");
+           
+            if (ehNumeroReal)
+            {
+                string fracaoTxt = inteiroTxt.Substring(inteiroTxt.IndexOf(",") + 1);
+                inteiroTxt = inteiroTxt.Substring(0, inteiroTxt.IndexOf(","));
+                
+                if (fracaoTxt.Length < 2 )
+                    fracaoTxt += "0";
 
-            //numeroExtenso += ReceberDeZeroAteCem(valorTxt);
+                fracaoExtenso = ConverteNumerosInteiros(fracaoTxt.TrimStart('0'));
+                fracaoExtenso += ReceberCentavos(fracaoTxt);
+            }
 
-            //if (ehNumeroReal)
-            //{
-            //    string centavosExtenso = ReceberDeZeroAteCem(numeroFracao);
+            numeroExtenso += ConverteNumerosInteiros(inteiroTxt);
+            if(ehNumeroReal && inteiroTxt != "0")
+                numeroExtenso += ReceberMoeda(inteiroTxt) +" e ";
+            numeroExtenso += fracaoExtenso;
 
-            //    if (valorTxt.StartsWith("0"))
-            //        numeroExtenso += centavosExtenso + ReceberCentavos(centavosExtenso);
-            //}
-            //else
-            //{
-            //    numeroExtenso += ReceberReal(valorTxt);
-            //}
-            numeroExtenso += ConverteNumerosInteiros(valorTxt);
+            if (ehNumeroReal || numeroExtenso.EndsWith("milhão ") || numeroExtenso.EndsWith("milhões ") || numeroExtenso.EndsWith("bilhão ") || numeroExtenso.EndsWith("bilhões "))
+                numeroExtenso += "de ";
 
-            numeroExtenso += ReceberReal(valorTxt);
+            if(!ehNumeroReal)
+                numeroExtenso += ReceberMoeda(inteiroTxt);
+            else
+                numeroExtenso += ReceberMoeda("0");
 
-            return numeroExtenso;
+            return numeroExtenso ;
         }
 
         private string ConverteNumerosInteiros(string numero)
         {
-            string inteiroExtenso = "";
-            bool estaPronto = false;
             int numeroDeDigitos = numero.Length;
             int posicaoMilhar = 0;
             string casaMilhar = "";
+            bool ehSomenteZeros = string.IsNullOrEmpty(numero.Trim('0'));
 
-            switch (numeroDeDigitos)
+            if(!ehSomenteZeros)
             {
-                case 1:
-                    inteiroExtenso = ReceberUnidades(numero);
-                    estaPronto = true;
-                    break;
+                switch (numeroDeDigitos)
+                {
+                    case 1:
+                        return ReceberUnidades(numero);
 
-                case 2:
-                    inteiroExtenso = ReceberDezenas(numero);
-                    estaPronto = true;
-                    break;
+                    case 2:
+                        return ReceberDezenas(numero);
 
-                case 3:
-                    inteiroExtenso = ReceberCentena(numero);
-                    estaPronto = true;
-                    break;
+                    case 3:
+                        return ReceberCentena(numero);
 
-                case 4:
-                case 5:
-                case 6:
-                    posicaoMilhar = (numeroDeDigitos % 4) + 1;
-                    casaMilhar = "mil ";
-                    break;
+                    case 4:
+                    case 5:
+                    case 6:
+                        posicaoMilhar = (numeroDeDigitos % 4) + 1;
+                        casaMilhar = "mil ";
+                        break;
 
-                case 7:
-                case 8:
-                case 9:
-                    posicaoMilhar = (numeroDeDigitos % 7) + 1;
-                    if (numeroDeDigitos == 7 && numero.StartsWith("1"))
-                        casaMilhar = "milhão ";
-                    else
-                        casaMilhar = "milhões ";
-                    break;
+                    case 7:
+                    case 8:
+                    case 9:
+                        posicaoMilhar = (numeroDeDigitos % 7) + 1;
+                        if (numeroDeDigitos == 7 && numero.StartsWith("1"))
+                            casaMilhar = "milhão ";
+                        else
+                            casaMilhar = "milhões ";
+                        break;
 
-                case 10:
-                case 11:
-                case 12:
-                    posicaoMilhar = (numeroDeDigitos % 10) + 1;
-                    if (numeroDeDigitos == 10 && numero.StartsWith("1"))
-                        casaMilhar = "bilhão ";
-                    else
-                        casaMilhar = "bilhôes ";
-                    break;
+                    case 10:
+                    case 11:
+                    case 12:
+                        posicaoMilhar = (numeroDeDigitos % 10) + 1;
+                        if (numeroDeDigitos == 10 && numero.StartsWith("1"))
+                            casaMilhar = "bilhão ";
+                        else
+                            casaMilhar = "bilhões ";
+                        break;
+                }
 
-                default:
-                    estaPronto = true;
-                    break;
+                return ConverteNumerosInteiros(numero.Substring(0, posicaoMilhar)) + casaMilhar + ConverteNumerosInteiros(numero.Substring(posicaoMilhar));
             }
-
-            if (!estaPronto)
-            {
-                if (!string.IsNullOrEmpty(numero.Trim('0')))
-                    inteiroExtenso = ConverteNumerosInteiros(numero.Substring(0, posicaoMilhar)) + casaMilhar + ConverteNumerosInteiros(numero.Substring(posicaoMilhar));
-                else
-                    inteiroExtenso = ConverteNumerosInteiros(numero.Substring(0, posicaoMilhar)) + ConverteNumerosInteiros(numero.Substring(posicaoMilhar));
-            }
-            return inteiroExtenso;
+            return "";
         }
             
         private string ReceberCentavos(string numero)
         {
-            if(numero == "0.01")
-                return "centavo de real";
+            if(numero == "01")
+                return "centavo ";
             else
-                return "centavos de real";
+                return "centavos ";
         }
 
-        private string ReceberReal(string numero)
+        private string ReceberMoeda(string numero)
         {
-            if (numero == "1")
+            if (numero == "1" || numero == "0")
                 return "real";
             else
                 return "reais";
@@ -133,149 +122,111 @@ namespace ChequeExtenso.ConsoleApp
 
         private string ReceberUnidades(string numero)
         {
-            string texto = "";
             switch (numero)
             {
                 case "1":
-                    texto = "um ";
-                    break;
+                    return "um ";
                 case "2":
-                    texto = "dois ";
-                    break;
+                    return "dois ";
                 case "3":
-                    texto = "três ";
-                    break;
+                    return "três ";
                 case "4":
-                    texto = "quatro ";
-                    break;
+                    return "quatro ";
                 case "5":
-                    texto = "cinco ";
-                    break;
+                    return "cinco ";
                 case "6":
-                    texto = "seis ";
-                    break;
+                    return "seis ";
                 case "7":
-                    texto = "sete ";
-                    break;
+                    return "sete ";
                 case "8":
-                    texto = "oito ";
-                    break;
+                    return "oito ";
                 case "9":
-                    texto = "nove ";
-                    break;
+                    return "nove ";
+                default:
+                    return "";
             }
-            return texto;
         }
 
         private string ReceberDezenas(string numero)
         {
-            string texto = "";
             switch (numero)
             {
                 case "10":
-                    texto = "dez ";
-                    break;
+                    return "dez ";
                 case "11":
-                    texto = "onze ";
-                    break;
+                    return "onze ";
                 case "12":
-                    texto = "doze ";
-                    break;
+                    return "doze ";
                 case "13":
-                    texto = "treze ";
-                    break;
+                    return "treze ";
                 case "14":
-                    texto = "catorze ";
-                    break;
+                    return "catorze ";
                 case "15":
-                    texto = "quinze ";
-                    break;
+                    return "quinze ";
                 case "16":
-                    texto = "dezesseis ";
-                    break;
+                    return "dezesseis ";                 
                 case "17":
-                    texto = "dezessete ";
-                    break;
+                    return "dezessete ";
                 case "18":
-                    texto = "dezoito ";
-                    break;
+                    return "dezoito ";
                 case "19":
-                    texto = "dezenove ";
-                    break;
+                    return "dezenove ";
                 case "20":
-                    texto = "vinte ";
-                    break;
+                    return "vinte ";
                 case "30":
-                    texto = "trinta ";
-                    break;
+                    return "trinta ";
                 case "40":
-                    texto = "quarenta ";
-                    break;
+                    return "quarenta ";
                 case "50":
-                    texto = "cinquenta ";
-                    break;
+                    return "cinquenta ";
                 case "60":
-                    texto = "sessenta ";
-                    break;
+                    return "sessenta ";
                 case "70":
-                    texto = "setenta ";
-                    break;
+                    return "setenta ";
                 case "80":
-                    texto = "oitenta ";
-                    break;
+                    return "oitenta ";
                 case "90":
-                    texto = "noventa ";
-                    break;
+                    return "noventa ";
+
                 default:
                     if (double.Parse(numero) > 0)
                     {
-                        texto = ReceberDezenas(numero.Substring(0, 1) + "0") + "e " + ReceberUnidades(numero.Substring(1));
+                        return ReceberDezenas(numero.Substring(0, 1) + "0") + "e " + ReceberUnidades(numero.Substring(1));
                     }
-                    break;
+                    return "";
             }
-            return texto;
         }
 
         private string ReceberCentena(string numero)
         {
-            string texto = "";
             switch (numero)
             {
                 case "100":
-                    texto = "cem ";
-                    break;
+                    return "cem ";
                 case "200":
-                    texto = "duzentos ";
-                    break;
+                    return "duzentos ";
                 case "300":
-                    texto = "trezentos ";
-                    break;
+                    return "trezentos ";
                 case "400":
-                    texto = "quatrocentos ";
-                    break;
+                    return "quatrocentos ";
                 case "500":
-                    texto = "quinhentos ";
-                    break;
+                    return "quinhentos ";
                 case "600":
-                    texto = "seiscentos ";
-                    break;
+                    return "seiscentos ";
                 case "700":
-                    texto = "setecentos ";
-                    break;
+                    return "setecentos ";
                 case "800":
-                    texto = "oitocentos ";
-                    break;
+                    return "oitocentos ";
                 case "900":
-                    texto = "novecentos ";
-                    break;
+                    return "novecentos ";
+
                 default:
                     if (double.Parse(numero) > 0)
                     {
-                        texto = ReceberCentena(numero.Substring(0, 1) + "00") + "e " + ReceberDezenas(numero.Substring(1));
+                        return ReceberCentena(numero.Substring(0, 1) + "00") + "e " + ReceberDezenas(numero.Substring(1));
                     }
-                    break;
+                    return "";
             }
-            return texto;
         }
     }
 }

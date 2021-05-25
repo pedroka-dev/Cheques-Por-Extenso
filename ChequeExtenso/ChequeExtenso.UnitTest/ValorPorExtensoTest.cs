@@ -32,7 +32,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_1()
         {
-            double valor = 1;
+            double valor = 1.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -44,7 +44,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_10()
         {
-            double valor = 10;
+            double valor = 10.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -56,7 +56,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_100()
         {
-            double valor = 100;
+            double valor = 100.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -68,7 +68,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_1000()
         {
-            double valor = 1000;
+            double valor = 1000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -80,7 +80,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_10000()
         {
-            double valor = 10000;
+            double valor = 10000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -92,7 +92,7 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_100000()
         {
-            double valor = 100000;
+            double valor = 100000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
@@ -104,49 +104,73 @@ namespace ChequeExtenso.UnitTest
         [TestCase]
         public void Deve_RetornarPorExtenso_1000000()
         {
-            double valor = 1000000;
+            double valor = 1000000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("um milhão reais", resultado);
+            Assert.AreEqual("um milhão de reais", resultado);
         }
 
         [TestCase]
         public void Deve_RetornarPorExtenso_10000000()
         {
-            double valor = 10000000;
+            double valor = 10000000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("dez milhões reais", resultado);
+            Assert.AreEqual("dez milhões de reais", resultado);
         }
 
         [TestCase]
         public void Deve_RetornarPorExtenso_100000000()
         {
-            double valor = 100000000;
+            double valor = 100000000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("cem milhões reais", resultado);
+            Assert.AreEqual("cem milhões de reais", resultado);
         }
 
         [TestCase]
         public void Deve_RetornarPorExtenso_1000000000()
         {
-            double valor = 1000000000;
+            double valor = 1000000000.00;
             string moeda = "brl";
 
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("um bilhão milhões reais", resultado);
+            Assert.AreEqual("um bilhão de reais", resultado);
+        }
+
+        [TestCase]
+        public void Deve_RetornarPorExtenso_10000000000()
+        {
+            double valor = 10000000000.00;
+            string moeda = "brl";
+
+            ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
+            string resultado = valorPorExtenso.ConverterParaExtenso();
+
+            Assert.AreEqual("dez bilhões de reais", resultado);
+        }
+
+        [TestCase]
+        public void Deve_RetornarPorExtenso_100000000000()
+        {
+            double valor = 100000000000.00;
+            string moeda = "brl";
+
+            ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
+            string resultado = valorPorExtenso.ConverterParaExtenso();
+
+            Assert.AreEqual("cem bilhões de reais", resultado);
         }
 
         [TestCase]
@@ -230,7 +254,7 @@ namespace ChequeExtenso.UnitTest
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("quinze mil quatrocentos e quinze reais e dezesseis centavos", resultado);
+            Assert.AreEqual("quinze mil quatrocentos e quinze reais e dezesseis centavos de real", resultado);
         }
 
         [TestCase]
@@ -266,7 +290,7 @@ namespace ChequeExtenso.UnitTest
             ValorPorExtenso valorPorExtenso = new ValorPorExtenso(valor, moeda);
             string resultado = valorPorExtenso.ConverterParaExtenso();
 
-            Assert.AreEqual("um milhão oitocentos e cinquenta e dois mil e setecentos reaiss", resultado);
+            Assert.AreEqual("um milhão oitocentos e cinquenta e dois mil setecentos reais", resultado);
         }
 
         [TestCase]
